@@ -1,30 +1,8 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Image, ListView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {ActivityIndicator, ListView, View} from 'react-native';
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
 import BrewdogAPI from './../api/brewdog';
-
-const styles = StyleSheet.create({
-    thumb: {
-        width: 60,
-        height: 80,
-        marginRight: 10,
-    },
-    textContainer: {
-        flex: 1,
-    },
-    separator: {
-        height: 1,
-        backgroundColor: '#dddddd',
-    },
-    title: {
-        fontSize: 20,
-        color: '#656565',
-    },
-    rowContainer: {
-        flexDirection: 'row',
-        padding: 10,
-    },
-});
+import ListItem from './ListItem';
 
 export default class BeerList extends Component {
 
@@ -59,7 +37,7 @@ export default class BeerList extends Component {
             return;
         }
 
-        const promise = BrewdogAPI.getBrewList(page, countPerPage).then((res) => {
+        state.promise = BrewdogAPI.getBrewList(page, countPerPage).then((res) => {
             if (!res || !res.data || res.data.length === 0) {
                 state.canLoadMore = false;
                 this.setState(state);
@@ -78,38 +56,12 @@ export default class BeerList extends Component {
             this.setState(state);
         });
 
-        state.promise = promise;
         state.isLoading = true;
         this.setState(state);
     }
 
     rowPressed(beerId) {
-        const {navigate} = this.props.navigation;
-        navigate('Details', {id: beerId});
-    }
-
-    renderRow(rowData) {
-        return (
-            <TouchableHighlight
-              onPress={() => this.rowPressed(rowData.id)}
-              underlayColor="#dddddd"
-            >
-                <View>
-                    <View style={styles.rowContainer}>
-                        <Image style={styles.thumb} resizeMode="contain" source={{uri: rowData.image_url}}/>
-                        <View style={styles.textContainer}>
-                            <Text
-                              style={styles.title}
-                              numberOfLines={1}
-                            >{rowData.name}</Text>
-                            <Text style={styles.price}>ABV: {rowData.abv}; IBU: {rowData.ibu}</Text>
-                            <Text style={styles.price} numberOfLines={1}>{rowData.description}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.separator}/>
-                </View>
-            </TouchableHighlight>
-        );
+        this.props.navigation.navigate('Details', {id: beerId});
     }
 
     render() {
@@ -122,15 +74,15 @@ export default class BeerList extends Component {
                   canLoadMore={this.state.canLoadMore}
                   onLoadMoreAsync={this.fetch}
                   dataSource={this.state.ds}
-                  renderRow={this.renderRow}
+                  renderRow={rowData => <ListItem rowData={rowData} onPress={() => this.rowPressed(rowData.id)} />}
                 />
-                {isLoading &&
-                <ActivityIndicator
-                  animating
-                  style={[styles.centering, {height: 80}]}
-                  size="large"
-                />
-                }
+                {isLoading && (
+                    <ActivityIndicator
+                      animating
+                      style={[{height: 80}]}
+                      size="large"
+                    />
+                )}
             </View>
         );
     }
