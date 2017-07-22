@@ -24,21 +24,21 @@ const styles = StyleSheet.create({
     },
 });
 
-const ListItem = () => (
+const ListItem = props => (
     <TouchableHighlight
-      onPress={() => this.props.onPress}
+      onPress={() => props.onPress}
       underlayColor="#dddddd"
     >
         <View>
             <View style={styles.rowContainer}>
-                <Image style={styles.thumb} resizeMode="contain" source={{uri: this.props.rowData.image_url}}/>
+                <Image style={styles.thumb} resizeMode="contain" source={{uri: props.rowData.image_url}}/>
                 <View style={styles.textContainer}>
                     <Text
                       style={styles.title}
                       numberOfLines={1}
-                    >{this.props.rowData.name}</Text>
-                    <Text style={styles.price}>ABV: {this.props.rowData.abv}; IBU: {this.props.rowData.ibu}</Text>
-                    <Text style={styles.price} numberOfLines={1}>{this.props.rowData.description}</Text>
+                    >{props.rowData.name}</Text>
+                    <Text style={styles.price}>ABV: {props.rowData.abv}; IBU: {props.rowData.ibu}</Text>
+                    <Text style={styles.price} numberOfLines={1}>{props.rowData.description}</Text>
                 </View>
             </View>
             <View style={styles.separator}/>

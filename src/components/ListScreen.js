@@ -21,7 +21,6 @@ export default class BeerList extends Component {
             canLoadMore: true,
         };
         this.fetch = this.fetch.bind(this);
-        this.renderRow = this.renderRow.bind(this);
     }
 
     componentWillMount() {
@@ -51,9 +50,14 @@ export default class BeerList extends Component {
                 promise: null,
                 canLoadMore: true,
             });
-        }).catch(() => {
+        }).catch((e) => {
+            console.warn(e);
             state.canLoadMore = false;
-            this.setState(state);
+            this.setState({
+                ds: this.state.ds.cloneWithRows([]),
+                isLoading: false,
+                canLoadMore: false
+            });
         });
 
         state.isLoading = true;

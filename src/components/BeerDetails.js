@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     },
 });
 
-const BeerDetails = () => {
-    const data = this.props.data;
+const BeerDetails = (props) => {
+    const data = props.data;
 
     if (!data) {
         return (
